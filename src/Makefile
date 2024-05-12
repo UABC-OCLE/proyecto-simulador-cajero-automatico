@@ -1,18 +1,22 @@
-# Regla principal para compilar el programa
-release: examen.bin
+# Variables
+ASM_SOURCE = functions.asm
+C_SOURCE = main.c
+OBJ_FILES = main.o functions.o
 
-# Compila el programa final enlazando los archivos objeto de C y ASM
-examen.bin: main.o code.o
-	gcc -o examen.bin main.o code.o -no-pie
+EXEC_RELEASE = main_release.bin
+EXEC_DEBUG = main_debug.bin
 
-# Compila el archivo fuente de C en un archivo objeto
-main.o: main.c
-	gcc -Wall -c main.c -o main.o
+release: $(OBJ_FILES)
+	gcc -o $(EXEC_RELEASE) $(OBJ_FILES)
 
-# Compila el archivo fuente de ASM en un archivo objeto
-code.o: code.asm
-	nasm -f elf64 code.asm -o code.o
+debug: $(OBJ_FILES)
+	gcc -g -o $(EXEC_DEBUG) $(OBJ_FILES)
 
-# Limpiar los archivos compilados y el ejecutable
+main.o: $(C_SOURCE)
+	gcc -c $(C_SOURCE)
+
+functions.o: $(ASM_SOURCE)
+	nasm -f elf64 -o functions.o $(ASM_SOURCE)
+
 clean:
-	rm -f *.o *.bin
+	rm -f $(OBJ_FILES) $(OBJ_FILES) $(EXEC_DEBUG)
