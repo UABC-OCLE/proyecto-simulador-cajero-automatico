@@ -1,13 +1,18 @@
+// Código en C
 // Librerías de C
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+# include <string.h>
 
 // Funciones de ensamblador
-extern int lenstr(char *str);
+//extern int lenstr(char *str);
+extern int compare_strings(char *str1, char *str2);
 
 int main(void)
 {
+    system("clear");
+    
     /// Settings de información de usuarios
     char *names[5] = {"Adrián\0", "Danicia\0", "Pellegrín\0", "Roger\0", "Jorge\0"};
     char *numcuenta[5] = {"003412\0", "132441\0", "13415\0", "492453\0", "314514\0"};
@@ -15,45 +20,74 @@ int main(void)
     int saldos[5] = {3400, 1300, 1800, 4000, 3000};
 
     /// Menu variables
-    int MenuUserOn = 1;
-    int menu_input, user_input;
+    int MenuUserOn, menu_input, user_input, cuenta_encontrada;
+    char input_account[20];
+    char input_pin[20];
 
-    /// User variables
-    //char user_name, user_na,
-    int number_account, saldoEnCuenta; // Pruebas
+    // Información del usuario
+    char *nombre_encontrado, *menu_num_cuenta;
+    int saldoEnCuenta;
 
     while(1)
     {
         printf("----------------------- MENU -----------------------\n\n");
         printf("Ingrese el numero con la funcion que desea realizar\n");
-        printf("(1) Iniciar operacion\n");
-        printf("(2) Cancelar operacion\n= ");
+        printf("(1) Iniciar operacion\n(2) Cancelar operacion\n= ");
         scanf("%d", &menu_input);
+        while(getchar() != '\n');
 
         switch(menu_input)
         {
             case 1:
-                MenuUserOn = 1;
-                saldoEnCuenta = 2000; // Esto se debe de reemplezar por el saldo en la cuenta del usuario
+                MenuUserOn = 0;
+                cuenta_encontrada = 0;
                 system("clear");
 
-                printf("Ingrese su numero de cuenta.\n= ");
-                scanf("%d",&number_account);
-
-                while(number_account != 1) // En un futuro se debe validar que el fgets es igual a una de las cuentas del usuario
+                while (!cuenta_encontrada)
                 {
-                    system("clear");
-                    printf("Opcion invalida, ingrese un nombre de usuario valido.\n= ");
-                    scanf("%d",&number_account);
+                    printf("Ingrese su número de cuenta:\n= ");
+                    fgets(input_account, sizeof(input_account), stdin);
+                    input_account[strcspn(input_account, "\n")] = '\0';
+
+                    printf("Ingrese su PIN:\n= ");
+                    fgets(input_pin, sizeof(input_pin), stdin);
+                    input_pin[strcspn(input_pin, "\n")] = '\0';
+
+                    // Comparar el número de cuenta ingresado con los números de cuenta almacenados
+                    for (int i = 0; i < 5; i++)
+                    {
+                        //Funcion en ensamblador
+                        if(compare_strings(input_account, numcuenta[i]) && compare_strings(input_pin, pins[i]))
+                        {
+                            cuenta_encontrada = 1;
+                            MenuUserOn = 1; // Si llega aquí significa que si puede entrar a la interfaz
+
+                            //IMPORTANTE PARA QUE FUNCIONE BIEN LA IMPRESION EN EL MENU
+                            menu_num_cuenta = numcuenta[i];
+                            nombre_encontrado = names[i];
+                            saldoEnCuenta = saldos [i];
+                            break;
+                        }
+                    }
+
+                    if (!cuenta_encontrada)
+                    {
+                        MenuUserOn = 0;
+                        system("clear");
+                        printf("Número de cuenta no válido. Inténtelo de nuevo.\n");
+                    }
                 }
 
                 while(MenuUserOn == 1)
-                {
-                    // Pasó el filtro de seguridad de acceso
+                {   // Pasó el filtro de seguridad de acceso
                     system("clear");
                     printf("----------------------- MENU DE USUARIO -----------------------\n\n");
-                    printf("Clave de usuario: %d\n", number_account);
+
+                    // Muestra de la información
+                    printf("¡Bienvenid@, %s!\nNumero de cuenta: %s\n", nombre_encontrado, menu_num_cuenta);
                     printf("Saldo disponible: %d\n\n", saldoEnCuenta);
+
+                    // Ingreso del usuario
                     printf("Ingrese el numero de la opcion que desee consultar\n");
                     printf("(1) Depositar\n(2) Retirar\n(3) Transferir\n(4) Cerrar sesion\n= ");
                     scanf("%d", &user_input);
@@ -64,7 +98,6 @@ int main(void)
                             sleep(1);
                             system("clear");
                             printf("----------------------- DEPOSITAR -----------------------\n\n");
-                            // Futura implementación: Si el saldo es mayor o igual a 10,000. NO DEBE DEPOSITAR
                             sleep(1);
                             break;
 
@@ -72,7 +105,6 @@ int main(void)
                             sleep(1);
                             system("clear");
                             printf("----------------------- RETIRAR -----------------------\n\n");
-                            // Futura implementación: Si el saldo es menor o igual a 100. NO DEBE RETIRAR
                             sleep(1);
                             break;
 
@@ -80,18 +112,21 @@ int main(void)
                             sleep(1);
                             system("clear");
                             printf("----------------------- TRANSFERIR -----------------------\n\n");
-                            // Futura implementación: Si el No de cuenta de otro usuario, NO DEBE TRANSFERIR
                             sleep(1);
                             break;
 
                         case 4:
+                            /// SETEEN SUS VARIABLES DE VALIDACIÓN A 0 POR SI LAS DUDAS
+
+                            MenuUserOn = 0; // Cerrando el menu de consultas en la cuenta
+                            cuenta_encontrada = 0; // Seteando a 0 la validación de ASM
+
                             sleep(1);
                             system("clear");
                             sleep(1);
                             printf("----------------------- Sesión cerrada exitosamente -----------------------\n\n");
                             sleep(1);
                             system("clear");
-                            MenuUserOn = 0; // Cerrando el menu de consultas en la cuenta
                             break;
 
                         default:
@@ -105,13 +140,12 @@ int main(void)
                 sleep(1);
                 system("clear");
                 sleep(1);
-                printf("----------------------- SESION CERRADA EXITOSAMENTE -----------------------\n");
-                sleep(1);
+                printf("\n\n----------------------- SESION CERRADA EXITOSAMENTE -----------------------\n\n\n");
                 return 0;
 
             default:
                 system("clear");
                 printf("Opcion no reconocida.\n\n");
-            }
+        }
     }
 }
