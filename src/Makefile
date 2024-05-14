@@ -7,7 +7,7 @@ EXEC_RELEASE = main_release.bin
 EXEC_DEBUG = main_debug.bin
 
 release: $(OBJ_FILES)
-	gcc -o $(EXEC_RELEASE) $(OBJ_FILES)
+	gcc -o $(EXEC_RELEASE) $(OBJ_FILES) -no-pie
 
 debug: $(OBJ_FILES)
 	gcc -g -o $(EXEC_DEBUG) $(OBJ_FILES)

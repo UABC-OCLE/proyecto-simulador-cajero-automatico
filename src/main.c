@@ -8,6 +8,7 @@
 // Funciones de ensamblador
 //extern int lenstr(char *str);
 extern int compare_strings(char *str1, char *str2);
+extern int retirar_dinero(int saldo, int retiro);
 
 int main(void)
 {
@@ -17,7 +18,7 @@ int main(void)
     char *names[5] = {"Adrián\0", "Danicia\0", "Pellegrín\0", "Roger\0", "Jorge\0"};
     char *numcuenta[5] = {"003412\0", "132441\0", "13415\0", "492453\0", "314514\0"};
     char *pins[5] = {"0034\0", "1323\0", "1341\0", "4924\0", "3145\0"};
-    int saldos[5] = {3400, 1300, 1800, 4000, 3000};
+    int saldos[5] = {10000, 1300, 1800, 4000, 3000};
 
     /// Menu variables
     int MenuUserOn, menu_input, user_input, cuenta_encontrada;
@@ -27,6 +28,7 @@ int main(void)
     // Información del usuario
     char *nombre_encontrado, *menu_num_cuenta;
     int saldoEnCuenta;
+    int cantidadRetirar;
 
     while(1)
     {
@@ -105,6 +107,11 @@ int main(void)
                             sleep(1);
                             system("clear");
                             printf("----------------------- RETIRAR -----------------------\n\n");
+                            printf("Ingrese la cantidad que desea retirar: ");
+                            scanf("%d", &cantidadRetirar);
+                            while(getchar() != '\n');
+                            saldoEnCuenta = retirar_dinero(saldoEnCuenta, cantidadRetirar);
+                            // printf("Saldo restante: %d\n\n", saldoEnCuenta);
                             sleep(1);
                             break;
 
