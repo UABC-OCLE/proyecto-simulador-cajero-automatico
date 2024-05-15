@@ -1,13 +1,13 @@
-// Código en C
 // Librerías de C
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-# include <string.h>
+#include <string.h>
 
 // Funciones de ensamblador
 //extern int lenstr(char *str);
 extern int compare_strings(char *str1, char *str2);
+extern int retirar_dinero(int saldo, int retiro);
 
 int main(void)
 {
@@ -17,7 +17,7 @@ int main(void)
     char *names[5] = {"Adrián\0", "Danicia\0", "Pellegrín\0", "Roger\0", "Jorge\0"};
     char *numcuenta[5] = {"003412\0", "132441\0", "13415\0", "492453\0", "314514\0"};
     char *pins[5] = {"0034\0", "1323\0", "1341\0", "4924\0", "3145\0"};
-    int saldos[5] = {3400, 1300, 1800, 4000, 3000};
+    int saldos[5] = {10000, 1300, 1800, 4000, 3000};
 
     /// Menu variables
     int MenuUserOn, menu_input, user_input, cuenta_encontrada;
@@ -27,6 +27,8 @@ int main(void)
     // Información del usuario
     char *nombre_encontrado, *menu_num_cuenta;
     int saldoEnCuenta;
+    int cantidadRetirar;
+    int user_identifier;
 
     while(1)
     {
@@ -39,6 +41,7 @@ int main(void)
         switch(menu_input)
         {
             case 1:
+                // Conservar estas lineas para inicializar los valores
                 MenuUserOn = 0;
                 cuenta_encontrada = 0;
                 system("clear");
@@ -66,6 +69,7 @@ int main(void)
                             menu_num_cuenta = numcuenta[i];
                             nombre_encontrado = names[i];
                             saldoEnCuenta = saldos [i];
+                            user_identifier = i;
                             break;
                         }
                     }
@@ -105,6 +109,13 @@ int main(void)
                             sleep(1);
                             system("clear");
                             printf("----------------------- RETIRAR -----------------------\n\n");
+
+                            printf("Ingrese la cantidad que desea retirar: ");
+                            scanf("%d", &cantidadRetirar);
+                            while(getchar() != '\n');
+                            saldoEnCuenta = retirar_dinero(saldoEnCuenta, cantidadRetirar); // Obteniendo el nuevo saldo
+                            saldos[user_identifier] = saldoEnCuenta; // Actualizando el valor del retiro en el arreglo saldos
+
                             sleep(1);
                             break;
 
@@ -120,6 +131,7 @@ int main(void)
 
                             MenuUserOn = 0; // Cerrando el menu de consultas en la cuenta
                             cuenta_encontrada = 0; // Seteando a 0 la validación de ASM
+                            user_identifier = 0;
 
                             sleep(1);
                             system("clear");
