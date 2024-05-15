@@ -1,9 +1,9 @@
-// Código en C
+
 // Librerías de C
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-# include <string.h>
+#include <string.h>
 
 // Funciones de ensamblador
 //extern int lenstr(char *str);
@@ -29,6 +29,7 @@ int main(void)
     char *nombre_encontrado, *menu_num_cuenta;
     int saldoEnCuenta;
     int cantidadRetirar;
+    int user_identifier;
 
     while(1)
     {
@@ -41,6 +42,7 @@ int main(void)
         switch(menu_input)
         {
             case 1:
+                // Conservar estas lineas para inicializar los valores
                 MenuUserOn = 0;
                 cuenta_encontrada = 0;
                 system("clear");
@@ -68,6 +70,7 @@ int main(void)
                             menu_num_cuenta = numcuenta[i];
                             nombre_encontrado = names[i];
                             saldoEnCuenta = saldos [i];
+                            user_identifier = i;
                             break;
                         }
                     }
@@ -107,11 +110,13 @@ int main(void)
                             sleep(1);
                             system("clear");
                             printf("----------------------- RETIRAR -----------------------\n\n");
+
                             printf("Ingrese la cantidad que desea retirar: ");
                             scanf("%d", &cantidadRetirar);
                             while(getchar() != '\n');
-                            saldoEnCuenta = retirar_dinero(saldoEnCuenta, cantidadRetirar);
-                            // printf("Saldo restante: %d\n\n", saldoEnCuenta);
+                            saldoEnCuenta = retirar_dinero(saldoEnCuenta, cantidadRetirar); // Obteniendo el nuevo saldo
+                            saldos[user_identifier] = saldoEnCuenta; // Actualizando el valor del retiro en el arreglo saldos
+
                             sleep(1);
                             break;
 
@@ -127,6 +132,7 @@ int main(void)
 
                             MenuUserOn = 0; // Cerrando el menu de consultas en la cuenta
                             cuenta_encontrada = 0; // Seteando a 0 la validación de ASM
+                            user_identifier = 0;
 
                             sleep(1);
                             system("clear");

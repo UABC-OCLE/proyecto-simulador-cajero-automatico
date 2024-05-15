@@ -1,18 +1,25 @@
 section .data
-    ; Retiro
-    error_retiro_insuficiente db "Error: Saldo insuficiente para realizar el retiro", 0
+    ; Mensajes para las funciones de retiro
+    cantidad_invalida db "Error: Verifique que la cantidad a retirar sea correcta.",10
+    cantidad_invalida_len equ $ - cantidad_invalida
+
+    error_retiro_insuficiente db "Error: Saldo insuficiente para realizar el retiro",10
     error_retiro_insuficiente_len equ $ - error_retiro_insuficiente
-    error_retiro_mayor db "Error: No se puede retirar una cantidad mayor a 8000", 0
-    error_retiro_maor_len equ $ - error_retiro_mayor
-    error_retiro_menor db "Error: No se puede retirar una cantidad menor a 0", 0
-    error_retiro_menor_len equ $ - error_retiro_menor
-    retiro_exitoso db "Retiro realizado con exito", 0
+    
+    retiro_exitoso db "Retiro realizado con exito",10
+    retiro_exitoso_len equ $ - retiro_exitoso
+
 section .text
 global compare_strings; FUNCIÓN REALIZADA POR ROGER
 global retirar_dinero; FUNCIÓN REALIZADA POR JORGE
 
 ; FUNCIONES DE VALIDACIÓN
 ; Estas validaciones tiene como objetivo comprobar que la operación que se está por ejecutar pueda ser realmente ejecutada
+
+; FUNCION DE RETIRAR - Roger # 000000
+; Params: 
+; rdi - Cadena de chars ingresada por el usuario
+; rsi - Cadena de char en el buffer actual (dada por i en C)
 
 compare_strings:
     xor rax, rax        ; Inicializar rax a 0
@@ -41,19 +48,39 @@ end:
 ; rsi - Cantidad a retirar
 
 retirar_dinero:
-    ; Si el retiro es mayor a 8000, retornar
-    cmp rsi, 8000
-    ja retiro_mayor
-    ; Si el retiro es menor a 0, retornar
-    cmp rsi, 0
-    jl retiro_menor
-    cmp rdi, rsi
-    ; Si el saldo es menor a la cantidad a retirar, retornar
-    jb retiro_insuficiente
+    cmp rsi, 0 ; Si el retiro es menor a 0, retornar
+    jle cantidad_incorrecta
+
+    cmp rsi, 8000 ; Si el retiro es mayor a 8000, retornar
+    jge cantidad_incorrecta
+    
+    cmp rdi, rsi ; Si el saldo es menor a la cantidad a retirar, retornar
+    jl retiro_insuficiente
+    
     ; Si el saldo es mayor o igual a la cantidad a retirar, restar la cantidad a retirar al saldo
     sub rdi, rsi
-    mov rax, rdi
+    mov rbx, rdi
+    
+    mov rbx, rdi
+    mov rdi, 1
+    mov rax, 1
+    mov rsi, retiro_exitoso
+    mov rdx, retiro_exitoso_len
+    syscall
+
+    mov rax, rbx
     ret
+
+cantidad_incorrecta:
+    mov rbx, rdi
+    mov rdi, 1
+    mov rax, 1
+    mov rsi, cantidad_invalida
+    mov rdx, cantidad_invalida_len
+    syscall
+    mov rax, rbx
+    ret
+
 retiro_insuficiente:
     mov rbx, rdi
     mov rdi, 1
@@ -62,22 +89,7 @@ retiro_insuficiente:
     mov rdx, error_retiro_insuficiente_len
     syscall
     jmp retornar_mismo_saldo
-retiro_mayor:
-    mov rbx, rdi
-    mov rdi, 1
-    mov rax, 1
-    mov rsi, error_retiro_mayor
-    mov rdx, error_retiro_maor_len
-    syscall
-    jmp retornar_mismo_saldo
-retiro_menor:
-    mov rbx, rdi
-    mov rdi, 1
-    mov rax, 1
-    mov rsi, error_retiro_menor
-    mov rdx, error_retiro_menor_len
-    syscall
-    jmp retornar_mismo_saldo
+
 retornar_mismo_saldo:
     mov rax, rbx
     ret
