@@ -9,9 +9,17 @@ section .data
     retiro_exitoso db "Retiro realizado con exito",10
     retiro_exitoso_len equ $ - retiro_exitoso
 
+    ; Mensajes para las funciones de depósito
+    deposito_exitoso db "Depósito realizado con éxito",10
+    deposito_exitoso_len equ $ - deposito_exitoso
+
+    deposito_incorrecto db "Error: Verifique que la cantidad a depositar sea correcta.",10
+    deposito_incorrecto_len equ $ - deposito_incorrecto
+
 section .text
 global compare_strings; FUNCIÓN REALIZADA POR ROGER
 global retirar_dinero; FUNCIÓN REALIZADA POR JORGE
+global depositar_dinero
 
 ; FUNCION DE RETIRAR - Roger # 000000
 ; Params: 
@@ -89,4 +97,37 @@ retiro_insuficiente:
 
 retornar_mismo_saldo:
     mov rax, rbx
+    ret
+
+; FUNCION DE RETIRAR - Danicia # 0000000
+; Params: 
+; rdi - Saldo Actual
+; rsi - Monto depósito
+
+depositar_dinero:
+    cmp rsi, 10000
+    jge deposito_invalido
+
+    ;Si llega a quí es que es válido
+    add rdi, rsi
+    mov rbx, rdi
+
+    mov rdi, 1
+    mov rax, 1
+    mov rsi, deposito_exitoso
+    mov rdx, deposito_exitoso_len
+    syscall
+
+    mov rax, rbx
+    ret
+
+deposito_invalido:
+    mov rbx, rdi
+    mov rdi, 1
+    mov rax, 1
+    mov rsi, deposito_incorrecto
+    mov rdx, deposito_incorrecto_len
+    syscall
+
+    mov rax, rbx; Retornar el mismo saldo
     ret

@@ -5,9 +5,10 @@
 #include <string.h>
 
 // Funciones de ensamblador
-//extern int lenstr(char *str);
-extern int compare_strings(char *str1, char *str2);
-extern int retirar_dinero(int saldo, int retiro);
+extern int compare_strings(char *str1, char *str2); // Función hecha por Roger
+extern int retirar_dinero(int saldo, int retiro);  // Función hecha por Jorge
+
+extern int depositar_dinero(int saldo_actual, int monto_deposito); // Funciones hechas por Danicia
 
 int main(void)
 {
@@ -102,9 +103,21 @@ int main(void)
                             sleep(1);
                             system("clear");
                             printf("----------------------- DEPOSITAR -----------------------\n\n");
+
+                            int monto_deposito;
+                            printf("Ingrese el monto a depositar: ");
+                            while(getchar() != '\n');
+                            scanf("%d", &monto_deposito);
+
+                            saldoEnCuenta = depositar_dinero(saldoEnCuenta, monto_deposito); // Llamado de la función
+
+                            if(saldoEnCuenta != saldos[user_identifier]) // Si el saldo "actualizado" != al saldo en la base de datos hay que reemplazarlo
+                            {
+                                saldos[user_identifier] = saldoEnCuenta; // Actualizando el saldo del usuario en la sesión actual
+                            }
+
                             sleep(1);
                             break;
-
                         case 2:
                             sleep(1);
                             system("clear");
