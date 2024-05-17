@@ -7,7 +7,7 @@
 // Funciones de ensamblador
 extern int compare_strings(char *str1, char *str2); // Función hecha por Roger
 extern int retirar_dinero(int saldo, int retiro);  // Función hecha por Jorge
-extern int depositar_dinero(int saldo_actual, int monto_deposito); // Función hechas por Danicia
+extern int depositar_dinero(int saldo_actual, int monto_deposito); // Función hecha por Danicia
 // void ticket(); Implementación de un tikcet?
 
 int main(void)
@@ -24,12 +24,14 @@ int main(void)
     int MenuUserOn, menu_input, user_input, cuenta_encontrada;
     char input_account[20];
     char input_pin[20];
+    char input_extern_account[20];
 
     // Información del usuario
     char *nombre_encontrado, *menu_num_cuenta;
     int saldoEnCuenta;
     int cantidadRetirar;
-    int user_identifier;
+    int user_identifier, user_identifier_transfer;
+    int transferAmount;
 
     while(1)
     {
@@ -69,7 +71,7 @@ int main(void)
                             //IMPORTANTE PARA QUE FUNCIONE BIEN LA IMPRESION EN EL MENU
                             menu_num_cuenta = numcuenta[i];
                             nombre_encontrado = names[i];
-                            saldoEnCuenta = saldos [i];
+                            saldoEnCuenta = saldos[i];
                             user_identifier = i;
                             break;
                         }
@@ -96,6 +98,7 @@ int main(void)
                     printf("Ingrese el numero de la opcion que desee consultar\n");
                     printf("(1) Depositar\n(2) Retirar\n(3) Transferir\n(4) Cerrar sesion\n= ");
                     scanf("%d", &user_input);
+                    while(getchar() != '\n');
 
                     switch(user_input)
                     {
@@ -136,7 +139,40 @@ int main(void)
                             sleep(1);
                             system("clear");
                             printf("----------------------- TRANSFERIR -----------------------\n\n");
-                            sleep(1);
+
+                            printf("Ingrese el numero de cuenta a la que quiere transferir: ");
+                            fflush(stdin);
+                            fgets(input_extern_account, sizeof(input_extern_account), stdin);
+                            input_extern_account[strcspn(input_extern_account, "\n")] = '\0';
+
+                            for (int i = 0; i < 5; i++)
+                            {
+                                if(compare_strings(input_extern_account, numcuenta[i]))
+                                {
+                                    cuenta_encontrada = 1;
+                                    user_identifier_transfer = i;
+                                    break;
+                                }
+                            }
+
+                            if (!cuenta_encontrada)
+                            {
+                                system("clear");
+                                printf("Número de cuenta no válido. Inténtelo de nuevo.\n");
+                            }
+                            else
+                            {
+                                printf("\n¡Cuenta encontrada!\nIngrese la cantidad a transferir: ");
+                                scanf("%d", &transferAmount);
+                                while(getchar() != '\n');
+                                // Función que valide que la cantidad a ingresar sea > 0
+
+                                sleep(1);
+                                printf("¡Transferencia realizada exitosamente!");
+                                saldoEnCuenta = saldoEnCuenta - transferAmount; // Restando el saldo en pantalla de la cuenta del usuario
+                                saldos[user_identifier] = saldoEnCuenta; // Actualizando el saldo de la cuenta del usuario en sesión
+                                saldos[user_identifier_transfer] = saldos[user_identifier_transfer] + transferAmount; // Aumentando el saldo en la cuenta externa
+                            }
                             break;
 
                         case 4:
@@ -145,6 +181,7 @@ int main(void)
                             MenuUserOn = 0; // Cerrando el menu de consultas en la cuenta
                             cuenta_encontrada = 0; // Seteando a 0 la validación de ASM
                             user_identifier = 0;
+                            user_identifier_transfer = 0;
 
                             sleep(1);
                             system("clear");
