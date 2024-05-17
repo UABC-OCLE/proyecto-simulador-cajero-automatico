@@ -8,6 +8,7 @@
 extern int compare_strings(char *str1, char *str2); // Función hecha por Roger
 extern int retirar_dinero(int saldo, int retiro);  // Función hecha por Jorge
 extern int depositar_dinero(int saldo_actual, int monto_deposito); // Función hecha por Danicia
+
 // void ticket(); Implementación de un tikcet?
 
 int main(void)
