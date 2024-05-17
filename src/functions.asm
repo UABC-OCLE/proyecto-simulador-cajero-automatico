@@ -17,11 +17,11 @@ section .data
     deposito_incorrecto_len equ $ - deposito_incorrecto
 
 section .text
-global compare_strings; FUNCIÓN REALIZADA POR ROGER
+global compare_strings; FUNCIÓN REALIZADA POR ROGELIO
 global retirar_dinero; FUNCIÓN REALIZADA POR JORGE
-global depositar_dinero
+global depositar_dinero; FUNCIÓN REALIZADA POR DANICIA
 
-; FUNCION DE RETIRAR - Roger # 000000
+; FUNCION DE ACCESO - Rogelio Lara Duran # 1291647
 ; Params: 
 ; rdi - Cadena de chars ingresada por el usuario
 ; rsi - Cadena de char en el buffer actual (dada por i en C)
@@ -99,7 +99,7 @@ retornar_mismo_saldo:
     mov rax, rbx
     ret
 
-; FUNCION DE RETIRAR - Danicia # 0000000
+; FUNCION DE DEPOSITAR - Danicia Yeudiel Garcia Guerrero # 1291295
 ; Params: 
 ; rdi - Saldo Actual
 ; rsi - Monto depósito
