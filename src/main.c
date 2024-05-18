@@ -8,7 +8,7 @@
 extern int compare_strings(char *str1, char *str2); // Función hecha por Roger
 extern int retirar_dinero(int saldo, int retiro);  // Función hecha por Jorge
 extern int depositar_dinero(int saldo_actual, int monto_deposito); // Función hecha por Danicia
-
+extern int comparar_saldos(int transferencia, int saldo); // Función hecha por Pellegón
 // void ticket(); Implementación de un tikcet?
 
 int main(void)
@@ -17,7 +17,7 @@ int main(void)
     
     /// Settings de información de usuarios
     char *names[5] = {"Adrián\0", "Danicia\0", "Pellegrín\0", "Roger\0", "Jorge\0"};
-    char *numcuenta[5] = {"003412\0", "132441\0", "13415\0", "492453\0", "314514\0"};
+    char *numcuenta[5] = {"003412\0", "132441\0", "134153\0", "492453\0", "314514\0"};
     char *pins[5] = {"0034\0", "1323\0", "1341\0", "4924\0", "3145\0"};
     int saldos[5] = {10000, 1300, 1800, 4000, 3000};
 
@@ -122,6 +122,7 @@ int main(void)
 
                             sleep(1);
                             break;
+
                         case 2:
                             sleep(1);
                             system("clear");
@@ -137,6 +138,9 @@ int main(void)
                             break;
 
                         case 3:
+                            cuenta_encontrada = 0;
+                            user_identifier_transfer = 0;
+
                             sleep(1);
                             system("clear");
                             printf("----------------------- TRANSFERIR -----------------------\n\n");
@@ -146,34 +150,65 @@ int main(void)
                             fgets(input_extern_account, sizeof(input_extern_account), stdin);
                             input_extern_account[strcspn(input_extern_account, "\n")] = '\0';
 
-                            for (int i = 0; i < 5; i++)
+                            if(!compare_strings(input_extern_account, menu_num_cuenta))
                             {
-                                if(compare_strings(input_extern_account, numcuenta[i]))
-                                {
-                                    cuenta_encontrada = 1;
-                                    user_identifier_transfer = i;
-                                    break;
+                                for(int j = 0; j < 5; j++)
+                                {   // Si llega aquí significa que las cuentas son diferentes, ahora se tiene que validar que la cuenta exista
+                                    if(user_identifier != j) // User identifier contiene el indice de la cuenta que se debe de evadir
+                                    {   
+                                        if(compare_strings(input_extern_account, numcuenta[j])) // Comparando que el input del usuario 
+                                        {
+                                            cuenta_encontrada = 1;
+                                            user_identifier_transfer = j;
+                                            break;
+                                        }
+                                    }
                                 }
-                            }
 
-                            if (!cuenta_encontrada)
-                            {
-                                system("clear");
-                                printf("Número de cuenta no válido. Inténtelo de nuevo.\n");
+                                if (cuenta_encontrada)
+                                {
+                                    printf("\n¡Cuenta encontrada!\nIngrese la cantidad a transferir: ");
+                                    scanf("%d", &transferAmount);
+                                    while(getchar() != '\n');
+
+                                    if(comparar_saldos(transferAmount, saldos[user_identifier]))
+                                    {
+                                        system("clear");
+                                        sleep(1);
+                                        printf("No se puede transferir ese monto desde esta cuenta.\n");
+                                        sleep(1);
+                                        system("clear");
+                                    }
+                                    else
+                                    {
+                                        system("clear");
+                                        sleep(1);
+                                        printf("Transferencia a la cuenta %s exitosa.\n", input_extern_account);
+                                        sleep(1);
+                                        system("clear");
+                                        saldoEnCuenta = saldoEnCuenta - transferAmount; // Actualizando el saldo en la interfaz
+                                        saldos[user_identifier] = saldos[user_identifier] - transferAmount; // Actualizando el saldo del usuario actual en el arreglo
+                                        saldos[user_identifier_transfer] = saldos[user_identifier_transfer] + transferAmount; // Actualizando el saldo del usuario externo en el arreglo
+                                    }
+                                }
+                                else
+                                {
+                                    sleep(1);
+                                    system("clear");
+                                    printf("Número de cuenta no válido. Inténtelo de nuevo.\n");
+                                    sleep(1);  
+                                }
                             }
                             else
                             {
-                                printf("\n¡Cuenta encontrada!\nIngrese la cantidad a transferir: ");
-                                scanf("%d", &transferAmount);
-                                while(getchar() != '\n');
-                                // Función que valide que la cantidad a ingresar sea > 0
-
+                                system("clear");
                                 sleep(1);
-                                printf("¡Transferencia realizada exitosamente!");
-                                saldoEnCuenta = saldoEnCuenta - transferAmount; // Restando el saldo en pantalla de la cuenta del usuario
-                                saldos[user_identifier] = saldoEnCuenta; // Actualizando el saldo de la cuenta del usuario en sesión
-                                saldos[user_identifier_transfer] = saldos[user_identifier_transfer] + transferAmount; // Aumentando el saldo en la cuenta externa
+                                printf("NO se puede enviar dinero a si mismo.\n");
+                                sleep(1);
+                                system("clear");
                             }
+
+                            sleep(1);
                             break;
 
                         case 4:

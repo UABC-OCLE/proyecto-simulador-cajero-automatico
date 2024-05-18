@@ -20,6 +20,7 @@ section .text
 global compare_strings; FUNCIÓN REALIZADA POR ROGELIO
 global retirar_dinero; FUNCIÓN REALIZADA POR JORGE
 global depositar_dinero; FUNCIÓN REALIZADA POR DANICIA
+global comparar_saldos; FUNCIÓN REALIZADA POR PELLEGRÍN
 
 ; FUNCION DE ACCESO - Rogelio Lara Duran # 1291647
 ; Params: 
@@ -130,4 +131,28 @@ deposito_invalido:
     syscall
 
     mov rax, rbx; Retornar el mismo saldo
+    ret
+
+; FUNCION DE TRANSFERENCIA - Pellegrín # 0000000
+; Params: 
+; rdi - (Monto a transferir)
+; rsi - (Saldo en cuenta)
+
+comparar_saldos:
+    xor rax, rax ; Limpiando rax por si las dudas
+
+    cmp rdi, 0 ; si es menor a 0 (negativo), error
+    jl .error
+
+    cmp rdi, 10000 ; si es mayor a 10000, error
+    jg .error
+
+    cmp rdi, rsi ; si el monto a transferir es mayor al saldo, error
+    jg .error
+
+    mov rax, 0 ; 0 es exitoso
+    ret
+
+.error:
+    mov rax, 1 ; 1 es error
     ret
