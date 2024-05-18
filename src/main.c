@@ -14,26 +14,26 @@ extern int comparar_saldos(int transferencia, int saldo); // Función hecha por 
 int main(void)
 {
     system("clear");
-    
+
     /// Settings de información de usuarios
     char *names[5] = {"Adrián\0", "Danicia\0", "Pellegrín\0", "Roger\0", "Jorge\0"};
     char *numcuenta[5] = {"003412\0", "132441\0", "134153\0", "492453\0", "314514\0"};
     char *pins[5] = {"0034\0", "1323\0", "1341\0", "4924\0", "3145\0"};
     int saldos[5] = {10000, 1300, 1800, 4000, 3000};
 
-    /// Menu variables
-    int MenuUserOn, menu_input, user_input, cuenta_encontrada;
-    char input_account[20];
-    char input_pin[20];
-    char input_extern_account[20];
-
-    // Información del usuario
-    char *nombre_encontrado, *menu_num_cuenta;
+    // Variables de consulta y muestra de información
+    char *username, *numberAccount;
     int saldoEnCuenta;
-    int cantidadRetirar;
-    int user_identifier, user_identifier_transfer;
-    int transferAmount;
 
+    // Inputs del usuario
+    char input_account[18], input_pin[18], input_extern_account[18];
+    int user_identifier, user_identifier_transfer;
+    int transferAmount, cantidadRetirar;
+
+    /// Variables de setting
+    int MenuUserOn, menu_input, user_input, cuenta_encontrada;
+
+    /* DESARROLLO DEL PROGRAMA */
     while(1)
     {
         printf("----------------------- MENU -----------------------\n\n");
@@ -52,11 +52,11 @@ int main(void)
 
                 while (!cuenta_encontrada)
                 {
-                    printf("Ingrese su número de cuenta:\n= ");
+                    printf("Ingrese su número de cuenta\n= ");
                     fgets(input_account, sizeof(input_account), stdin);
                     input_account[strcspn(input_account, "\n")] = '\0';
 
-                    printf("Ingrese su PIN:\n= ");
+                    printf("Ingrese su PIN\n= ");
                     fgets(input_pin, sizeof(input_pin), stdin);
                     input_pin[strcspn(input_pin, "\n")] = '\0';
 
@@ -70,8 +70,8 @@ int main(void)
                             MenuUserOn = 1; // Si llega aquí significa que si puede entrar a la interfaz
 
                             //IMPORTANTE PARA QUE FUNCIONE BIEN LA IMPRESION EN EL MENU
-                            menu_num_cuenta = numcuenta[i];
-                            nombre_encontrado = names[i];
+                            numberAccount = numcuenta[i];
+                            username = names[i];
                             saldoEnCuenta = saldos[i];
                             user_identifier = i;
                             break;
@@ -81,8 +81,11 @@ int main(void)
                     if (!cuenta_encontrada)
                     {
                         MenuUserOn = 0;
+                        sleep(0.5);
+                        printf("Numero de cuenta o contraseña inválidos. Inténtelo de nuevo.\n");
+                        sleep(1);
                         system("clear");
-                        printf("Número de cuenta no válido. Inténtelo de nuevo.\n");
+                        sleep(0.8);
                     }
                 }
 
@@ -92,7 +95,7 @@ int main(void)
                     printf("----------------------- MENU DE USUARIO -----------------------\n\n");
 
                     // Muestra de la información
-                    printf("¡Bienvenid@, %s!\nNumero de cuenta: %s\n", nombre_encontrado, menu_num_cuenta);
+                    printf("¡Bienvenid@, %s!\nNumero de cuenta: %s\n", username, numberAccount);
                     printf("Saldo disponible: %d\n\n", saldoEnCuenta);
 
                     // Ingreso del usuario
@@ -150,7 +153,7 @@ int main(void)
                             fgets(input_extern_account, sizeof(input_extern_account), stdin);
                             input_extern_account[strcspn(input_extern_account, "\n")] = '\0';
 
-                            if(!compare_strings(input_extern_account, menu_num_cuenta))
+                            if(!compare_strings(input_extern_account, numberAccount))
                             {
                                 for(int j = 0; j < 5; j++)
                                 {   // Si llega aquí significa que las cuentas son diferentes, ahora se tiene que validar que la cuenta exista
@@ -213,11 +216,10 @@ int main(void)
 
                         case 4:
                             /// SETEEN SUS VARIABLES DE VALIDACIÓN A 0 POR SI LAS DUDAS
-
                             MenuUserOn = 0; // Cerrando el menu de consultas en la cuenta
                             cuenta_encontrada = 0; // Seteando a 0 la validación de ASM
-                            user_identifier = 0;
-                            user_identifier_transfer = 0;
+                            user_identifier = 0; // Identificador a 0
+                            user_identifier_transfer = 0; // Identificador a 0
 
                             sleep(1);
                             system("clear");
@@ -235,15 +237,16 @@ int main(void)
                 break;
 
             case 2:
-                sleep(1);
                 system("clear");
-                sleep(1);
                 printf("\n\n----------------------- SESION CERRADA EXITOSAMENTE -----------------------\n\n\n");
                 return 0;
 
             default:
-                system("clear");
+                sleep(0.5);
                 printf("Opcion no reconocida.\n\n");
+                sleep(1);
+                system("clear");
+                sleep(0.5);
         }
     }
 }
