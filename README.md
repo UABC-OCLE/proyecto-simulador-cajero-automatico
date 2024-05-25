@@ -33,8 +33,8 @@ A continuación se enlistan las opciones de consulta y operaciones disponibles e
 	
 ------------
 ##### Información sobre los desarrolladores
-Adrián Elí Ramírez Martínez - 2201328
-Rogelio Lara Duran - 1291647
-Jorge Omar Torres Sosa - 1270900
-Danicia Yeudiel Garcia Guerrero - 1291295
-Pellgerín - ####
+Adrián Elí Ramírez Martínez - 2201328,
+Rogelio Lara Duran - 1291647,
+Jorge Omar Torres Sosa - 1270900,
+Danicia Yeudiel Garcia Guerrero - 1291295,
+Kevin Paul Pellegrín Vasquez - 2207262
