@@ -1,3 +1,6 @@
+/// APLICACIÓN EXCLUSIVAMENTE ENFOCADA PARA LA DEPENDENCIA LINUX X86 - 64 BITS
+// Es importante tener instalada la distribución de Linux: Ubuntu 22.04 en adelante.
+
 // Librerías de C
 #include <stdio.h>
 #include <stdlib.h>
@@ -9,7 +12,6 @@ extern int compare_strings(char *str1, char *str2); // Función hecha por Roger
 extern int retirar_dinero(int saldo, int retiro);  // Función hecha por Jorge
 extern int depositar_dinero(int saldo_actual, int monto_deposito); // Función hecha por Danicia
 extern int comparar_saldos(int transferencia, int saldo); // Función hecha por Pellegón
-// void ticket(); Implementación de un tikcet?
 
 int main(void)
 {
