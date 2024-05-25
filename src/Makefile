@@ -3,8 +3,8 @@ ASM_SOURCE = functions.asm
 C_SOURCE = main.c
 OBJ_FILES = main.o functions.o
 
-EXEC_RELEASE = main_release.bin
-EXEC_DEBUG = main_debug.bin
+EXEC_RELEASE = SystemAtm.exe
+#/EXEC_DEBUG = test.bin - Archivo solo usado para las pruebas
 
 release: $(OBJ_FILES)
 	gcc -o $(EXEC_RELEASE) $(OBJ_FILES) -no-pie
