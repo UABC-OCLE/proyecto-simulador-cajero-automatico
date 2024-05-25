@@ -27,11 +27,11 @@ int main(void)
 
     // Inputs del usuario
     char input_account[18], input_pin[18], input_extern_account[18];
-    int user_identifier, user_identifier_transfer;
     int transferAmount, cantidadRetirar;
 
-    /// Variables de setting
+    /// Variables de funcionamiento 
     int MenuUserOn, menu_input, user_input, cuenta_encontrada;
+    int user_identifier, user_identifier_transfer;
 
     /* DESARROLLO DEL PROGRAMA */
     while(1)
@@ -56,7 +56,7 @@ int main(void)
                     fgets(input_account, sizeof(input_account), stdin);
                     input_account[strcspn(input_account, "\n")] = '\0';
 
-                    printf("Ingrese su PIN\n= ");
+                    printf("\nIngrese su PIN\n= ");
                     fgets(input_pin, sizeof(input_pin), stdin);
                     input_pin[strcspn(input_pin, "\n")] = '\0';
 
@@ -90,7 +90,7 @@ int main(void)
                 }
 
                 while(MenuUserOn == 1)
-                {   // Pasó el filtro de seguridad de acceso
+                {   // Pasó el filtro de seguridad para validar el acceso
                     system("clear");
                     printf("----------------------- MENU DE USUARIO -----------------------\n\n");
 
@@ -107,14 +107,14 @@ int main(void)
                     switch(user_input)
                     {
                         case 1:
-                            sleep(1);
+                            sleep(0.8);
                             system("clear");
                             printf("----------------------- DEPOSITAR -----------------------\n\n");
 
                             int monto_deposito;
                             printf("Ingrese el monto a depositar: ");
-                            while(getchar() != '\n');
                             scanf("%d", &monto_deposito);
+                            while(getchar() != '\n');
 
                             saldoEnCuenta = depositar_dinero(saldoEnCuenta, monto_deposito); // Llamado de la función
 
@@ -127,13 +127,14 @@ int main(void)
                             break;
 
                         case 2:
-                            sleep(1);
+                            sleep(0.8);
                             system("clear");
                             printf("----------------------- RETIRAR -----------------------\n\n");
 
                             printf("Ingrese la cantidad que desea retirar: ");
                             scanf("%d", &cantidadRetirar);
                             while(getchar() != '\n');
+
                             saldoEnCuenta = retirar_dinero(saldoEnCuenta, cantidadRetirar); // Obteniendo el nuevo saldo
                             saldos[user_identifier] = saldoEnCuenta; // Actualizando el valor del retiro en el arreglo saldos
 
@@ -144,7 +145,7 @@ int main(void)
                             cuenta_encontrada = 0;
                             user_identifier_transfer = 0;
 
-                            sleep(1);
+                            sleep(0.8);
                             system("clear");
                             printf("----------------------- TRANSFERIR -----------------------\n\n");
 
@@ -153,19 +154,16 @@ int main(void)
                             fgets(input_extern_account, sizeof(input_extern_account), stdin);
                             input_extern_account[strcspn(input_extern_account, "\n")] = '\0';
 
-                            if(!compare_strings(input_extern_account, numberAccount))
+                            if(!compare_strings(input_extern_account, numberAccount)) // Evaluando que el ususario no se quiera enviar dinero a si mismo
                             {
-                                for(int j = 0; j < 5; j++)
-                                {   // Si llega aquí significa que las cuentas son diferentes, ahora se tiene que validar que la cuenta exista
-                                    if(user_identifier != j) // User identifier contiene el indice de la cuenta que se debe de evadir
-                                    {   
-                                        if(compare_strings(input_extern_account, numcuenta[j])) // Comparando que el input del usuario 
+                                for(int i = 0; i < 5; i++)
+                                {
+                                    if(compare_strings(input_extern_account, numcuenta[i])) // Comparando que el input del usuario councida con algun número de cuenta
                                         {
                                             cuenta_encontrada = 1;
-                                            user_identifier_transfer = j;
+                                            user_identifier_transfer = i; // Brindando el índice del usuario identificado
                                             break;
                                         }
-                                    }
                                 }
 
                                 if (cuenta_encontrada)
@@ -176,19 +174,20 @@ int main(void)
 
                                     if(comparar_saldos(transferAmount, saldos[user_identifier]))
                                     {
-                                        system("clear");
-                                        sleep(1);
+                                        sleep(0.5);
                                         printf("No se puede transferir ese monto desde esta cuenta.\n");
                                         sleep(1);
                                         system("clear");
+                                        sleep(0.5);
                                     }
                                     else
                                     {
-                                        system("clear");
-                                        sleep(1);
+                                        sleep(0.5);
                                         printf("Transferencia a la cuenta %s exitosa.\n", input_extern_account);
                                         sleep(1);
                                         system("clear");
+                                        sleep(0.5);
+
                                         saldoEnCuenta = saldoEnCuenta - transferAmount; // Actualizando el saldo en la interfaz
                                         saldos[user_identifier] = saldos[user_identifier] - transferAmount; // Actualizando el saldo del usuario actual en el arreglo
                                         saldos[user_identifier_transfer] = saldos[user_identifier_transfer] + transferAmount; // Actualizando el saldo del usuario externo en el arreglo
@@ -196,17 +195,16 @@ int main(void)
                                 }
                                 else
                                 {
+                                    sleep(0.5);
+                                    printf("Numero de cuenta no identificado. Inténtelo de nuevo.\n");
                                     sleep(1);
                                     system("clear");
-                                    printf("Número de cuenta no válido. Inténtelo de nuevo.\n");
-                                    sleep(1);  
                                 }
                             }
                             else
                             {
-                                system("clear");
-                                sleep(1);
-                                printf("NO se puede enviar dinero a si mismo.\n");
+                                sleep(0.5);
+                                printf("No puede enviar dinero a su misma cuenta, intentelo de nuevo.\n");
                                 sleep(1);
                                 system("clear");
                             }
@@ -215,22 +213,26 @@ int main(void)
                             break;
 
                         case 4:
-                            /// SETEEN SUS VARIABLES DE VALIDACIÓN A 0 POR SI LAS DUDAS
+                            /// Reinicio de variables para evitar incongruencias
                             MenuUserOn = 0; // Cerrando el menu de consultas en la cuenta
                             cuenta_encontrada = 0; // Seteando a 0 la validación de ASM
                             user_identifier = 0; // Identificador a 0
                             user_identifier_transfer = 0; // Identificador a 0
 
-                            sleep(1);
+                            sleep(0.8);
                             system("clear");
                             sleep(1);
-                            printf("----------------------- Sesión cerrada exitosamente -----------------------\n\n");
+                            printf("----------------------- Sesión cerrada exitosamente -----------------------\n");
                             sleep(1);
                             system("clear");
                             break;
 
                         default:
-                            printf("Opcion invalida.\n\n");
+                            sleep(0.5);
+                            printf("Opcion no reconocida.\n\n");
+                            sleep(1);
+                            system("clear");
+                            sleep(0.5);
                             break;
                     }
                 }
@@ -247,6 +249,7 @@ int main(void)
                 sleep(1);
                 system("clear");
                 sleep(0.5);
+                break;
         }
     }
 }

@@ -13,7 +13,7 @@ section .data
     deposito_exitoso db "Depósito realizado con éxito",10
     deposito_exitoso_len equ $ - deposito_exitoso
 
-    deposito_incorrecto db "Error: Verifique que la cantidad a depositar sea correcta.",10
+    deposito_incorrecto db "Error: La cantidad que ingresó no es válida.",10
     deposito_incorrecto_len equ $ - deposito_incorrecto
 
 section .text
@@ -58,14 +58,14 @@ retirar_dinero:
     jle cantidad_incorrecta
 
     cmp rsi, 8000 ; Si el retiro es mayor a 8000, retornar
-    jge cantidad_incorrecta
+    jg cantidad_incorrecta
     
     cmp rdi, rsi ; Si el saldo es menor a la cantidad a retirar, retornar
     jl retiro_insuficiente
     
     ; Si el saldo es mayor o igual a la cantidad a retirar, restar la cantidad a retirar al saldo
     sub rdi, rsi
-    mov rbx, rdi
+    mov rbx, rdi ; rbx sirve como un registro auxiliar para guardar el nuevo saldo
     
     mov rbx, rdi
     mov rdi, 1
@@ -133,7 +133,7 @@ deposito_invalido:
     mov rax, rbx; Retornar el mismo saldo
     ret
 
-; FUNCION DE TRANSFERENCIA - Pellegrín # 0000000
+; FUNCION DE TRANSFERENCIA - Kevin Paul Pellegrín Vasquez # 2207262
 ; Params: 
 ; rdi - (Monto a transferir)
 ; rsi - (Saldo en cuenta)
