@@ -242,7 +242,7 @@ int main(void)
 
             case 2:
                 system("clear");
-                printf("\n\n----------------------- SESION CERRADA EXITOSAMENTE -----------------------\n\n\n");
+                printf("\n\n----------------------- APLICACIÓN CERRADA EXITOSAMENTE -----------------------\n\n\n");
                 return 0;
 
             default:
