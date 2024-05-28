@@ -107,7 +107,7 @@ retornar_mismo_saldo:
 
 depositar_dinero:
     cmp rsi, 10000
-    jge deposito_invalido
+    jg deposito_invalido
 
     ;Si llega a quí es que es válido
     add rdi, rsi

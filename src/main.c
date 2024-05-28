@@ -170,7 +170,10 @@ int main(void)
 
                                 if (cuenta_encontrada)
                                 {
-                                    printf("\n¡Cuenta encontrada!\nIngrese la cantidad a transferir: ");
+                                    sleep(0.5);
+                                    system("clear");
+                                    sleep(0.5);
+                                    printf("¡Cuenta encontrada!\nIngrese la cantidad a transferir: ");
                                     scanf("%d", &transferAmount);
                                     while(getchar() != '\n');
 
@@ -184,9 +187,10 @@ int main(void)
                                     }
                                     else
                                     {
+                                        system("clear");
                                         sleep(0.5);
                                         printf("Transferencia a la cuenta %s exitosa.\n", input_extern_account);
-                                        sleep(1);
+                                        sleep(1.5);
                                         system("clear");
                                         sleep(0.5);
 
