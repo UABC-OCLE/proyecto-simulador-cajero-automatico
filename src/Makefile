@@ -4,7 +4,6 @@ C_SOURCE = main.c
 OBJ_FILES = main.o functions.o
 
 EXEC_RELEASE = SystemAtm.exe
-#/EXEC_DEBUG = test.bin - Archivo solo usado para las pruebas
 
 release: $(OBJ_FILES) # Cración del sistema ejecutable
 	gcc -o $(EXEC_RELEASE) $(OBJ_FILES) -no-pie
